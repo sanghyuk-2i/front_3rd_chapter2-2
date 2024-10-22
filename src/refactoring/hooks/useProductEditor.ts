@@ -14,9 +14,9 @@ export const useProductEditor = () => {
     key: keyof Product,
     value: Product[keyof Product]
   ) => {
-    if (!product) return;
-
-    setProduct({ ...product, [key]: value });
+    setProduct(
+      (prevProduct) => prevProduct && { ...prevProduct, [key]: value }
+    );
   };
 
   const validateSubmit = (callback: (editProduct: Product) => void) => {

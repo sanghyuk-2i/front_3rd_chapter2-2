@@ -12,7 +12,7 @@ export const useToggle = () => {
   };
 
   const turnToggleOff = () => {
-    setIsToggle(true);
+    setIsToggle(false);
   };
 
   return { isToggle, toggle, turnToggleOn, turnToggleOff };
