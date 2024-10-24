@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { describe, expect, test, vi } from 'vitest';
+import { describe, expect, test } from 'vitest';
 import {
   act,
   fireEvent,
@@ -11,12 +11,9 @@ import {
 import { CartPage } from '../../refactoring/components/CartPage';
 import { AdminPage } from '../../refactoring/components/AdminPage';
 import { Coupon, Product } from '../../types';
-import {
-  useLocalStorage,
-  useProductEditor,
-  useToggle,
-} from '../../refactoring/hooks';
-import { formatDiscountValue } from '../../refactoring/hooks/utils/couponUtils';
+import { useLocalStorage, useToggle } from '../../refactoring/hooks';
+import { formatDiscountValue } from '../../refactoring/features/coupon/utils';
+import { useProductEditor } from '../../refactoring/features/product/hooks';
 
 const mockProducts: Product[] = [
   {

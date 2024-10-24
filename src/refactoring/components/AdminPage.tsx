@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Coupon, Discount, Product } from '../../types';
-import { useForm, useToggle, useProductEditor } from '../../refactoring/hooks';
-import { formatDiscountValue } from '../hooks/utils/couponUtils';
+import { useForm, useToggle } from '../../refactoring/hooks';
+import { formatDiscountValue } from '../features/coupon/utils';
+import { useProductEditor } from '../features/product/hooks';
 
 interface Props {
   products: Product[];

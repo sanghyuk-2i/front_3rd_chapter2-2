@@ -1,4 +1,4 @@
-import { Coupon } from '../../types.ts';
+import { Coupon } from '../../../../types';
 import { useState } from 'react';
 
 export const useCoupons = (initialCoupons: Coupon[]) => {

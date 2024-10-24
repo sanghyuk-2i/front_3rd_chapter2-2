@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Product } from '../../types';
+import { Product } from '../../../../types';
 
 export const useProductEditor = () => {
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
