@@ -8,8 +8,8 @@ import {
   screen,
   within,
 } from '@testing-library/react';
-import { CartPage } from '../../refactoring/components/CartPage';
-import { AdminPage } from '../../refactoring/components/AdminPage';
+import { CartPage } from '../../refactoring/pages/cart';
+import { AdminPage } from '../../refactoring/pages/admin';
 import { CartItem, Coupon, Product } from '../../types';
 import * as cartUtils from '../../refactoring/features/cart/utils';
 import { useCart } from '../../refactoring/features/cart/hooks';
