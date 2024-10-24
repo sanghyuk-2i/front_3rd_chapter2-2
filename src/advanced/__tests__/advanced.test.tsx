@@ -14,6 +14,10 @@ import { Coupon, Product } from '../../types';
 import { useLocalStorage, useToggle } from '../../refactoring/hooks';
 import { formatDiscountValue } from '../../refactoring/features/coupon/utils';
 import { useProductEditor } from '../../refactoring/features/product/hooks';
+import {
+  getAppliedDiscount,
+  getMaxDiscount,
+} from '../../refactoring/features/product/utils';
 
 const mockProducts: Product[] = [
   {
@@ -52,6 +56,31 @@ const mockCoupons: Coupon[] = [
     discountValue: 10,
   },
 ];
+
+const MOCK_DISCOUNTS = [
+  { quantity: 3, rate: 10 },
+  { quantity: 5, rate: 30 },
+];
+
+const MOCK_CART = {
+  product: {
+    id: 'p1',
+    name: '상품1',
+    price: 10000,
+    stock: 20,
+    discounts: [
+      {
+        quantity: 10,
+        rate: 0.1,
+      },
+      {
+        quantity: 20,
+        rate: 0.2,
+      },
+    ],
+  },
+  quantity: 1,
+};
 
 const TestAdminPage = () => {
   const [products, setProducts] = useState<Product[]>(mockProducts);
@@ -279,6 +308,28 @@ describe('advanced > ', () => {
 
       test("100이라는 값에서 할인 유형이 '금액'이면 원 단위로 출력되어야 한다.", () => {
         expect(formatDiscountValue(100, 'amount')).toBe('100원');
+      });
+    });
+  });
+
+  describe('productUtils', () => {
+    describe('getMaxDiscount', () => {
+      test('최대 할인율이 출력되어야 한다.', () => {
+        expect(getMaxDiscount(MOCK_DISCOUNTS)).toBe(30);
+      });
+    });
+
+    describe('getAppliedDiscount', () => {
+      test('상품1을 한 개 구매할 경우 할인은 없다.', () => {
+        expect(getAppliedDiscount(MOCK_CART)).toBe(0);
+      });
+
+      test('상품1을 10개 구매할 경우 10% 할인 해야 한다.', () => {
+        expect(getAppliedDiscount({ ...MOCK_CART, quantity: 10 })).toBe(0.1);
+      });
+
+      test('상품1을 20개 구매할 경우 20% 할인 해야 한다.', () => {
+        expect(getAppliedDiscount({ ...MOCK_CART, quantity: 20 })).toBe(0.2);
       });
     });
   });
