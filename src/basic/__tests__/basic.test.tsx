@@ -6,6 +6,7 @@ import {
   render,
   renderHook,
   screen,
+  waitFor,
   within,
 } from '@testing-library/react';
 import { CartPage } from '../../refactoring/pages/cart';
@@ -274,35 +275,75 @@ describe('basic > ', () => {
 
   describe('useProducts > ', () => {
     const initialProducts: Product[] = [
-      { id: '1', name: 'Product 1', price: 100, stock: 10, discounts: [] },
+      {
+        id: 'p1',
+        name: '상품1',
+        price: 10000,
+        stock: 20,
+        discounts: [
+          { quantity: 10, rate: 0.1 },
+          { quantity: 20, rate: 0.2 },
+        ],
+      },
+      {
+        id: 'p2',
+        name: '상품2',
+        price: 20000,
+        stock: 20,
+        discounts: [{ quantity: 10, rate: 0.15 }],
+      },
+      {
+        id: 'p3',
+        name: '상품3',
+        price: 30000,
+        stock: 20,
+        discounts: [{ quantity: 10, rate: 0.2 }],
+      },
     ];
 
-    test('특정 제품으로 초기화할 수 있다.', () => {
-      const { result } = renderHook(() => useProducts(initialProducts));
-      expect(result.current.products).toEqual(initialProducts);
+    test('특정 제품으로 초기화할 수 있다.', async () => {
+      const { result } = renderHook(() => useProducts());
+      await waitFor(() =>
+        expect(result.current.products).toEqual(initialProducts)
+      );
     });
 
-    test('제품을 업데이트할 수 있다.', () => {
-      const { result } = renderHook(() => useProducts(initialProducts));
+    test('제품을 업데이트할 수 있다.', async () => {
+      const { result } = renderHook(() => useProducts());
+
+      await waitFor(() => {
+        expect(result.current.products[0]).toMatchObject(initialProducts[0]);
+      });
+
       const updatedProduct = { ...initialProducts[0], name: 'Updated Product' };
 
       act(() => {
         result.current.updateProduct(updatedProduct);
       });
 
-      expect(result.current.products[0]).toEqual({
-        discounts: [],
-        id: '1',
-        name: 'Updated Product',
-        price: 100,
-        stock: 10,
-      });
+      await waitFor(() =>
+        expect(result.current.products[0]).toEqual({
+          id: 'p1',
+          name: 'Updated Product',
+          price: 10000,
+          stock: 20,
+          discounts: [
+            { quantity: 10, rate: 0.1 },
+            { quantity: 20, rate: 0.2 },
+          ],
+        })
+      );
     });
 
-    test('새로운 제품을 추가할 수 있다.', () => {
-      const { result } = renderHook(() => useProducts(initialProducts));
+    test('새로운 제품을 추가할 수 있다.', async () => {
+      const { result } = renderHook(() => useProducts());
+
+      await waitFor(() => {
+        expect(result.current.products).toHaveLength(3);
+      });
+
       const newProduct: Product = {
-        id: '2',
+        id: '3',
         name: 'New Product',
         price: 200,
         stock: 5,
@@ -313,19 +354,27 @@ describe('basic > ', () => {
         result.current.addProduct(newProduct);
       });
 
-      expect(result.current.products).toHaveLength(2);
-      expect(result.current.products[1]).toEqual(newProduct);
+      expect(result.current.products).toHaveLength(4);
+      expect(result.current.products[3]).toEqual(newProduct);
     });
   });
 
   describe('useCoupons > ', () => {
-    test('쿠폰을 초기화할 수 있다.', () => {
-      const { result } = renderHook(() => useCoupons(mockCoupons));
-      expect(result.current.coupons).toEqual(mockCoupons);
+    test('쿠폰을 초기화할 수 있다.', async () => {
+      const { result } = renderHook(() => useCoupons());
+
+      await waitFor(() => {
+        expect(result.current.coupons).toEqual(mockCoupons);
+      });
     });
 
-    test('쿠폰을 추가할 수 있다', () => {
-      const { result } = renderHook(() => useCoupons(mockCoupons));
+    test('쿠폰을 추가할 수 있다', async () => {
+      const { result } = renderHook(() => useCoupons());
+
+      await waitFor(() => {
+        expect(result.current.coupons).toHaveLength(2);
+      });
+
       const newCoupon: Coupon = {
         name: 'New Coupon',
         code: 'NEWCODE',
